@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -24,13 +23,19 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
-    private Boolean emailNonLocked = false;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
+
+    public User(String firstname, String lastname, String email, String password, String role){
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.role =  role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
@@ -50,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return emailNonLocked;
+        return true;
     }
 
     @Override
