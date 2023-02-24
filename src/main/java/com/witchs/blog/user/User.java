@@ -24,13 +24,15 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
+    private Boolean emailVerified;
 
-    public User(String firstname, String lastname, String email, String password, String role){
+    public User(String firstname, String lastname, String email, String password, String role, Boolean emailVerified){
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role =  role;
+        this.emailVerified = emailVerified;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return emailVerified;
     }
 
     @Override

@@ -19,7 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,9 +26,9 @@ import java.util.stream.Stream;
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Value("${secret.key}")
     private String KEY;
-    private TokenCreator tokenCreator;
+    private final TokenCreator tokenCreator;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public JwtTokenFilter(TokenCreator tokenCreator, UserRepository userRepository) {
         this.tokenCreator = tokenCreator;
