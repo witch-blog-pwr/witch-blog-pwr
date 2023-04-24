@@ -44,6 +44,7 @@ public class SecurityConfig {
         http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.authorizeHttpRequests()
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/calgo").permitAll()
                 .requestMatchers("/hello").hasRole("ADMIN")
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

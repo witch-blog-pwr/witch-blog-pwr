@@ -1,4 +1,4 @@
-package com.witchs.blog.auth;
+package com.witchs.blog.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AuthResponse {
-    private String email;
-    private String token;
+public class UserResponse {
+    private String key;
 }

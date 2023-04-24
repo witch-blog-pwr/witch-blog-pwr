@@ -15,6 +15,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,19 +35,16 @@ public class AuthApi {
         this.tokenCreator = tokenCreator;
     }
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) throws Exception {
+    public ResponseEntity<Object> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword());
             Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             User user = (User) authenticate.getPrincipal();
             String token = tokenCreator.createToken(user);
-            AuthResponse authResponse = new AuthResponse(token);
-            response.addHeader("Token", token);
+            AuthResponse authResponse = new AuthResponse(user.getEmail(), token);
             return ResponseEntity.ok(authResponse);
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            return ResponseEntity.badRequest().body(e);
         }
     }
 }

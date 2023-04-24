@@ -25,7 +25,7 @@ public class TokenCreator {
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .withClaim("expiredTime", new Date().getTime() + (60000 * 15))
+                .withClaim("expiredTime", new Date().getTime() + (60000 * 60 * 24))
                 .sign(algorithm);
     }
 

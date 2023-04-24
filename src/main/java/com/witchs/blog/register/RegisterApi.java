@@ -9,9 +9,7 @@ import java.util.regex.*;
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,15 +32,17 @@ public class RegisterApi {
         try {
             String password = registerRequest.getPassword();
             validatePassword(password);
+            String email = registerRequest.getEmail();
+            validateEmail(email);
             User user = new User(registerRequest.getFirstname(), registerRequest.getLastname(),
                 registerRequest.getEmail(), passwordEncoder.encode(password),
                 "USER", false);
             emailSenderService.sendVerificationEmail(registerRequest.getEmail());
             userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+            return ResponseEntity.ok().build();
 
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().body(exception);
         }
     }
 
@@ -54,6 +54,12 @@ public class RegisterApi {
         Matcher matcher = validationPattern.matcher(password);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Password policy incompatible");
+        }
+    }
+
+    private void validateEmail(String email) throws IllegalArgumentException {
+        if(userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
         }
     }
 }
